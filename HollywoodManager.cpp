@@ -5,7 +5,7 @@
 
 #define NUM_OF_ACTORS 100
 #define NUM_OF_EPISODES 100
-#define K_CONST 1
+#define K_CONST 3
 #define CHECK_STOP 2
 
 using namespace std;
@@ -18,7 +18,7 @@ void calc_intervals(int involved_actors_in_episodes[NUM_OF_ACTORS][NUM_OF_EPISOD
 		{
 			if(0 != involved_actors_in_episodes[i][ schedule[j] ]) 
 			{
-				intervals[i][0] = j;//schedule[j];
+				intervals[i][0] = j;
 				break;
 			}
 		}
@@ -26,8 +26,7 @@ void calc_intervals(int involved_actors_in_episodes[NUM_OF_ACTORS][NUM_OF_EPISOD
 		{
 			if(0 != involved_actors_in_episodes[i][ schedule[j] ]) 
 			{
-				intervals[i][1] = j;//schedule[j];
-				//if(intervals[i][0] > intervals[i][1]) { std::swap(intervals[i][0], intervals[i][1]); }
+				intervals[i][1] = j;
 				break;
 			}
 		}
@@ -117,9 +116,12 @@ int main()
 				for(int j = i + 1; j < NUM_OF_EPISODES; j++)
 				{
 					C_schedule_envir.push_back(C_schedule);
-					std::swap(C_schedule_envir[C_schedule_envir.size() - 1][i], C_schedule_envir[C_schedule_envir.size() - 1][j]);
-					//std::swap(C_schedule_envir.pop_back[i], C_schedule_envir.pop_back()[j]);
-				
+					for(int perm = 1; perm <= k; perm++)
+					{
+						int index_i = (i + (k - perm)) % NUM_OF_EPISODES;
+						int index_j = (j + (k - perm)) % NUM_OF_EPISODES;
+						std::swap(C_schedule_envir[C_schedule_envir.size() - 1][index_i], C_schedule_envir[C_schedule_envir.size() - 1][index_j]);
+					}
 				}
 			}
 			// get C' (random schedule from C-environmet)
@@ -139,7 +141,6 @@ int main()
 					{
 						C1_schedule_env.push_back(C1_schedule);
 						std::swap(C1_schedule_env[C1_schedule_env.size() - 1][i], C1_schedule_env[C1_schedule_env.size() - 1][j]);
-						//std::swap(C1_schedule_env.pop_back[i], C1_schedule_env.pop_back[j]);
 					}
 				}
 				// начинается локальный спуск
@@ -187,7 +188,7 @@ int main()
 		}
 	}
 
-	std::cout<<"result: " << result_budget;
+	std::cout<<"result: " << result_budget << " K = " << K_CONST << std::endl;
 
 return 0;
 }
